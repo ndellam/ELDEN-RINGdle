@@ -1025,25 +1025,20 @@ function setGameMsg(msg) {
   document.getElementById('gameMsg').textContent = msg || '';
 }
 
-// ---- Known info autofill ----
+// ---- Location info autofill ----
 function autofillKnownInfo() {
   if (!target || autofillInfo) return;
-  // Find the first unknown category and fill it in, then update known info table
-  const categories = [
-    'base','dlc','night','parry',
-    'types','locations','immunities','strong','weak',
-    'appearances','runes'
-  ];
-  for (const k of categories) {
-    if (!(k in known)) {
-      autofillInfo = { key: k, value: target[k] };
-      known[k] = target[k];
-      setGameMsg(`HP reached 5: "${k}" has been auto-filled!`);
-      renderKnown();
-      return;
-    }
+
+  const k = 'locations'; // always autofill locations
+
+  if (!(k in known)) {
+    autofillInfo = { key: k, value: target[k] };
+    known[k] = target[k];
+    setGameMsg(`HP reached 5: "${k}" has been auto-filled!`);
+    renderKnown();
   }
 }
+
 
 // ---- Boss drop reveal ----
 function revealBossDrop() {
@@ -1461,4 +1456,5 @@ loadGame();
 </script>
 </body>
 </html>
+
 
