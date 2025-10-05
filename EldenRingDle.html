@@ -1,0 +1,1463 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <link href="https://db.onlinewebfonts.com/c/d3a00bc6de5edde92f76c656c7db7bac?family=Agmena+W01+Regular" rel="stylesheet">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ELDEN RINGdle</title>
+  <style>
+    :root{--bg:#f6f7fb;--card:#ffffff;--accent:#2563eb;--muted:#6b7280}
+    
+    @font-face {
+      font-family: "Mantinia";
+      src: url("Mantinia Regular.otf") format("opentype");
+    }
+
+    body{
+      font-family: "Agmena W01 Regular", serif;
+      margin:20px;
+      font-size: 20px;
+      background:var(--bg) url('https://eldenring.wiki.fextralife.com/file/Elden-Ring/elden-ring-wiki-guide-walkthrough-background-min.jpg');
+      color:#a29e9b
+    }
+    .container{max-width:1800px;margin:0 auto;background:none}
+    h1{margin:0 0 6px 0;font-size:20px}
+    p.hint{margin:0 0 14px 0;color: #999999;font-size:13px}
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+      justify-content: center;
+    }
+    input[type=text]{
+      padding:10px 12px;
+      border-radius:8px;
+      border:1px solid #d6d7da;
+      font-size:14px;
+      flex:1;
+      text-align: center;
+    }
+    button {
+      padding:10px 12px;
+      border-radius:8px;
+      border:0;
+      background: #b19973;
+      color: #111;
+      cursor:pointer;
+      font-weight:600;
+    }
+    button.secondary {
+      background: #b19973;
+      color: #111;
+    }
+
+    table{width:100%;border-collapse:collapse;margin-top:12px}
+    th {
+      /* Remove fixed size for header cells */
+      width: auto;
+      height: auto;
+      min-width: unset;
+      min-height: unset;
+      max-width: unset;
+      max-height: unset;
+    }
+    td {
+      width: 130px;
+      height: 130px;
+      min-width: 130px;
+      min-height: 130px;
+      max-width: 130px;
+      max-height: 130px;
+      box-sizing: border-box;
+      font-weight: bold;
+      color: #fff;
+      text-shadow: 3px 3px 6px #000;
+      font-size: 16px;
+    }
+    th,td{padding:8px;border:1px solid #2a2623;text-align:left;font-size:18px}
+    thead th{background: none;font-weight:700}
+    .green{background:#007c00}
+    .red{background:#aa0000}
+    .yellow{background:#ffd000}
+    .muted{color:var(--muted);font-size:13px}
+
+    #knownCard{margin-top:16px;padding:12px;border-radius:10px;background:#000000da;}
+    .small{font-size:13px}
+
+    .center{display:flex;align-items:center;gap:8px}
+    .hidden{display:none}
+
+    .boss-cell {
+      width: 130px;
+      height: 130px;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      vertical-align: middle;
+      white-space: normal; /* allow wrapping */
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-weight: bold;
+      color: #b19973;
+      text-shadow: 3px 3px 6px #000000;
+      position: relative;
+      padding: 0;
+      border: none;
+      background-color: #000;
+      display: table-cell;
+    }
+
+    /* Inner wrapper to center text */
+    .boss-cell span {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      word-break: break-word;
+      white-space: normal; /* allow wrapping */
+      padding: 4px;
+    }
+
+    td img.icon {
+      width: 59px;
+      height: 59px;
+      object-fit: contain;
+      vertical-align: middle;
+      margin: 1px;
+      border-radius: 6px;
+      border: 1px solid #e6e9ef;
+      background: #fff;
+    }
+
+    @media (max-width:900px){ .topbar{flex-direction:column;align-items:stretch} }
+
+    /* New styles for colored text */
+    ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+    li {
+      margin: 0;
+      padding: 0;
+    }
+
+    #healthBar {
+      margin-bottom:12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    #helpBtn {
+      margin-bottom: 12px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      background: #b19973;
+      color: #111;
+      font-weight: bold;
+      border-radius: 8px;
+      border: none;
+      padding: 10px 18px;
+      cursor: pointer;
+      font-family: "Mantinia";
+      font-size: 20px;
+    }
+    #helpPopup {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      background: #222;
+      color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 32px #000a;
+      padding: 32px 24px 24px 24px;
+      max-width: 420px;
+      font-size: 15px;
+      text-align: left;
+    }
+    #helpPopup h2 {
+      margin-top: 0;
+      color: #b19973;
+      font-size: 20px;
+      font-family: "Mantinia";
+      text-align: center;
+    }
+    #helpPopup button {
+      margin-top: 18px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      background: #b19973;
+      color: #111;
+      font-weight: bold;
+      border-radius: 8px;
+      border: none;
+      padding: 8px 18px;
+      font-family: "Mantinia";
+      cursor: pointer;
+      font-size: 20px;
+    }
+    #helpOverlay {
+      display: none;
+      position: fixed;
+      z-index: 999;
+      left: 0; top: 0; width: 100vw; height: 100vh;
+      font-family: "Mantinia";
+      background: rgba(0,0,0,0.5);
+    }
+
+  #popupOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6); /* dark overlay behind the popup */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+  z-index: 9999;
+}
+
+/* 🔹 The overlay covering the screen */
+#popupOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* 🔹 The popup box itself */
+#popupBox {
+  width: 100%;                
+  height: 33vh;               /* one-third of viewport height */
+  background: #000;
+  color: #fff;
+  font-size: 70px;
+  font-family: "Mantinia";
+  text-align: center;
+  display: flex;              
+  justify-content: center;
+  align-items: center;
+
+  /* transition for fade and slide */
+  transition: transform 0.4s ease, opacity 0.4s ease;
+  transform: translateY(0);
+  
+  /* 🔹 Blurred top and bottom edges */
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%);
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%);
+  mask-repeat: no-repeat;
+  mask-size: 100% 100%;
+}
+
+/* 🔹 When visible */
+#popupOverlay.show {
+  opacity: 1;
+  pointer-events: all;
+}
+
+#popupOverlay.show #popupBox {
+  transform: translateY(0);
+}
+
+
+  </style>
+</head>
+<body>
+  <h1 style="font-family: 'Mantinia'; font-size: 80px; text-align: center; text-shadow: 3px 3px 4px #000000; text-shadow: -3px -3px 4px #000000; padding-top: 18px;">
+    <span style="color: #b19973;">ELDEN RING</span><span style="color: #999999; font-size: 40px;">DLE</span>
+    </h1>
+  <div class="container">
+    <button id="helpBtn">HOW TO PLAY</button>
+    <div id="helpOverlay"></div>
+    <div id="helpPopup">
+      <h2>HOW TO PLAY</h2>
+      <div id="helpContent" style="font-size: 18px;">
+        Data auto-loaded from a <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vS23utq_6wyFNy7xbaMkOyJ8CqQg3ksRtb-qNNBJHWeycx9aqiZZoYmckFCuuk8wT9zgQqvtmo5swuf/pubhtml" target="_blank" style="color:#b19973;text-decoration:underline;">Google Sheet</a> (it was hand-made, so I apologise if there's any mistakes!). Guess bosses by name (autocomplete available). The target is chosen randomly and hidden.<br>
+        <b>Health system:</b> You start with 10 HP. Each incorrect guess costs 1 HP.<br>
+        At <b>5 HP</b>, the locations category is auto-filled.<br>
+        At <b>1 HP</b>, the boss drop is revealed in the known information table to help you clutch up!<br>
+        If you guess correctly, you win. If you reach 0 HP, you lose and the boss is revealed.
+      </div>
+      <button id="closeHelpBtn">CLOSE</button>
+    </div>
+
+    <div id="healthBar" style="transform:scale(2); transform-origin:center; text-align:center; padding-top: 10px;">
+      <span id="healthLabel" style="font-weight:bold; color: #ffffff; padding-right: 10px;">Health:</span>
+      <div style="display:inline-block;vertical-align:middle;width:120px;height:18px;background:#00000059; border: 1px solid #b19973;">
+        <div id="healthFill" style="height:100%;background:#eb2d2d;width:100%;transition:width 0.8s;"></div>
+      </div>
+      <span id="healthValue" style="margin-left:8px;font-weight:bold; color: #ffffff;">10/10</span>
+    </div>
+    <div id="gameMsg" class="muted small" style="margin-bottom:8px; font-size: 30px; color: #ffffff; text-align: center;"></div>
+
+    <div class="topbar" style="padding-top: 10px;">
+      <input 
+    id="guessInput" 
+    list="bossList" 
+    placeholder="Type or pick a boss and press Enter" 
+    autocomplete="off" 
+    style="
+        font-family: 'Agmena W01 Regular';
+        font-size: 24px;         /* larger text */
+        width: 400px;            /* wider box */
+        height: 40px;            /* taller box */
+        padding: 10px 15px;      /* padding inside the box */
+        background-color: #000;  /* black background */
+        color: #d6d7da;             /* white text */
+        border: 2px solid #d6d7da;  /* optional: white border */
+        border-radius: 8px;      /* rounded corners */
+    "
+/>
+<datalist id="bossList"></datalist>
+
+      <button id="guessBtn"; style="font-family: 'Mantinia'; padding: 15px 30px; font-size: 27px;"; >GUESS</button> 
+      <button id="revealBtn" class="secondary hidden">Reveal (dev)</button>
+    </div>
+
+    <div id="knownCard" style="margin-bottom:16px;">
+      <h3 style="margin:0 0 8px 0; color: #b19973; font-family: 'Mantinia';">KNOWN INFORMATION</h3>
+      <table id="knownTable">
+        <thead>
+          <tr>
+            <th>Boss</th>
+            <th>In the base game?</th>
+            <th>In the DLC?</th>
+            <th>In Nightreign?</th>
+            <th>Parriable</th>
+            <th>Boss Type(s)</th>
+            <th>Appearances (not including Nightreign)</th>
+            <th>Locations (not including Nightreign)</th>
+            <th>Immunities</th>
+            <th>Strong</th>
+            <th>Weak</th>
+            <th>Runes dropped (earliest appearance)</th>
+            <th id="dropHeader" style="display:none;">Boss Drop</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div id="knownCard" style="margin-bottom:0px;">
+    <h2 style="color: #b19973; font-family: 'Mantinia';">GUESSES</h2>
+    <div style="margin-bottom:8px;">
+        <span style="color:#ffffff;  text-shadow: 3px 3px 6px #000000;background:#007c00;border-radius:4px;padding:2px 6px;margin-right:6px;">Green = correct</span>
+        <span style="color:#ffffff;  text-shadow: 3px 3px 6px #000000; background:#aa0000;border-radius:4px;padding:2px 6px;margin-right:6px;">Red = incorrect</span>
+        <span style="color:#ffffff;  text-shadow: 3px 3px 6px #000000; background:#ffd000;border-radius:4px;padding:2px 6px;margin-right:6px;">Yellow = 1+ correct values, but not all</span>
+        <span style="margin-right:6px;"><span style="color:#ffffff;">▲</span> = greater than</span>
+        <span><span style="color:#ffffff;">▼</span> = less than</span>
+      </div>
+
+    <table id="guessesTable" aria-live="polite">
+      <thead>
+        <tr>
+          <!-- Remove guess number column -->
+            <th>Boss</th>
+            <th>In the base game?</th>
+            <th>In the DLC?</th>
+            <th>In Nightreign?</th>
+            <th>Parriable</th>
+            <th>Boss Type(s)</th>
+            <th>Appearances (not including Nightreign)</th>
+            <th>Locations (not including Nightreign)</th>
+            <th>Immunities</th>
+            <th>Strong</th>
+            <th>Weak</th>
+            <th>Runes dropped (earliest appearance)</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    </div>
+
+    <div id="status" class="muted small" style="margin-top:12px">Loading sheet…</div>
+    <div class="muted small" style="margin-top:12px">More of my <a href="https://nathanellam.my.canva.site/" target="_blank" style="color:#b19973;text-decoration:underline;">games</a></div>
+  </div>
+
+  <div id="popupOverlay">
+    <div id="popupBox"></div>
+  </div>
+<script>
+// ---- Configuration (hardcoded) ----
+const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1rgOGXBr-sXbht4oZdDQhQd8Lsl9kb_FtjCXXH_rfw-g/gviz/tq?tqx=out:csv&sheet=Sheet1';
+const SHEET2_CSV_URL = 'https://docs.google.com/spreadsheets/d/1rgOGXBr-sXbht4oZdDQhQd8Lsl9kb_FtjCXXH_rfw-g/gviz/tq?tqx=out:csv&sheet=Sheet2';
+const SHEET3_CSV_URL = 'https://docs.google.com/spreadsheets/d/1rgOGXBr-sXbht4oZdDQhQd8Lsl9kb_FtjCXXH_rfw-g/gviz/tq?tqx=out:csv&sheet=Sheet3';
+
+// Column mapping (1-indexed). Header row will be ignored.
+const COLS = { name:1, base:3, dlc:4, night:5, parry:6, types:7, appearances:8, locations:9, immunities:10, strong:11, weak:12, runes:13, drop:14, img:15 };
+
+// ---- State ----
+let bosses = []; // parsed boss objects
+let target = null; // target boss object
+let guesses = []; // {name, meta, cmp}
+let known = {};
+let possibleInts = { appearances: new Set(), runes: new Set() };
+let health = 10;
+let dropRevealed = false;
+let autofillDone = false;
+let autofillInfo = null; // Track what was autofilled
+let valueImageMap = new Map(); // Stores {lowercase_value: {word, imgUrl}}
+let textColorMap = new Map(); // Stores {value: color}
+
+// ---- Utilities ----
+function csvToArray(text){
+  const rows=[]; const lines = text.split(/\r?\n/);
+  for(let raw of lines){ if(!raw.trim()) continue; const cells=[]; let cur=''; let inQ=false;
+    for(let i=0;i<raw.length;i++){ const ch = raw[i]; if(ch==='"'){ if(inQ && raw[i+1]==='"'){ cur+='"'; i++; } else { inQ = !inQ; } continue; }
+      if(ch===',' && !inQ){ cells.push(cur); cur=''; } else cur+=ch; }
+    cells.push(cur); rows.push(cells);
+  }
+  return rows;
+}
+function normBool(v){ if(v===undefined||v===null) return false; const s=String(v).trim().toLowerCase(); return ['true','yes','y','1','t','✔','x'].includes(s); }
+function splitMulti(v){ 
+  if(!v && v!==0) return []; 
+  return String(v).split(/[;,|\n]+/).map(s=>s.trim()).filter(Boolean);
+}
+function eqArrayExact(a,b){ if(a.length!==b.length) return false; const A=[...a].sort(); const B=[...b].sort(); for(let i=0;i<A.length;i++) if(A[i]!==B[i]) return false; return true; }
+function intersects(a,b){ return a.some(x=>b.includes(x)); }
+
+// Load value->image mapping from Sheet2
+async function loadValueImageMap() {
+  const res = await fetch(SHEET2_CSV_URL);
+  if(!res.ok) throw new Error('Failed to fetch Sheet2');
+  const txt = await res.text();
+  const rows = csvToArray(txt);
+  // Skip header row
+  for(const row of rows.slice(1)) {
+    if(row.length < 2 || !row[0] || !row[1]) continue;
+    valueImageMap.set(row[0].trim().toLowerCase(), {
+      word: row[0].trim(),
+      imgUrl: row[1].trim()
+    });
+  }
+}
+
+// Load text color mapping from Sheet3
+async function loadTextColors() {
+  const res = await fetch(SHEET3_CSV_URL);
+  if(!res.ok) throw new Error('Failed to fetch Sheet3');
+  const txt = await res.text();
+  const rows = csvToArray(txt);
+  // Skip header row
+  for(const row of rows.slice(1)) {
+    if(row.length < 2 || !row[0] || !row[1]) continue;
+    textColorMap.set(row[0].trim(), row[1].trim());
+  }
+}
+
+// Helper to render value as image
+function renderValueAsImage(value) {
+  const entry = valueImageMap.get(value.toLowerCase());
+  if(entry) {
+    return `<img class="icon" src="${escapeHtml(entry.imgUrl)}" 
+      alt="${escapeHtml(entry.word)}" 
+      title="${escapeHtml(entry.word)}" />`;
+  }
+  return escapeHtml(value);
+}
+
+// Add this new function
+function renderColoredText(value) {
+  const color = textColorMap.get(value) || '#000000';
+  return `<span style="color:${color};text-shadow:3px 3px 6px rgba(0,0,0,0.5);">${escapeHtml(value)}</span>`;
+}
+
+// ---- Parsing ----
+function parseRows(rows){
+  // skip header
+  const data = rows.slice(1).filter(r=>r.length>0);
+  bosses = data.map(r=>({
+    raw:r,
+    name: r[COLS.name-1] ? r[COLS.name-1].trim() : '',
+    img: r[COLS.img-1] ? r[COLS.img-1].trim() : '', // column O is the image url
+    base: normBool(r[COLS.base-1]),
+    dlc: normBool(r[COLS.dlc-1]),
+    night: normBool(r[COLS.night-1]),
+    parry: normBool(r[COLS.parry-1]),
+    types: splitMulti(r[COLS.types-1]),
+    appearances: r[COLS.appearances-1] ? parseInt(r[COLS.appearances-1],10) : null,
+    locations: splitMulti(r[COLS.locations-1]),
+    immunities: splitMulti(r[COLS.immunities-1]),
+    strong: splitMulti(r[COLS.strong-1]),
+    weak: splitMulti(r[COLS.weak-1]),
+    runes: r[COLS.runes-1] ? parseInt(r[COLS.runes-1],10) : null,
+    drop: r[COLS.drop-1] ? r[COLS.drop-1].trim() : ''
+  })).filter(b=>b.name);
+
+  possibleInts.appearances = new Set(bosses.filter(b=>Number.isInteger(b.appearances)).map(b=>b.appearances));
+  possibleInts.runes = new Set(bosses.filter(b=>Number.isInteger(b.runes)).map(b=>b.runes));
+}
+
+// Helper to get image for a boss name
+function getBossImg(name) {
+  const boss = bosses.find(b=>b.name===name);
+  return boss && boss.img ? boss.img : '';
+}
+
+// ---- Health bar ----
+function updateHealthBar() {
+  const fill = document.getElementById('healthFill');
+  const val = document.getElementById('healthValue');
+  fill.style.width = (health*10) + '%';
+  val.textContent = `${health}/10`;
+}
+
+// ---- Game message ----
+function setGameMsg(msg) {
+  document.getElementById('gameMsg').textContent = msg || '';
+}
+
+// ---- Known info autofill ----
+function autofillKnownInfo() {
+  if (!target || autofillInfo) return;
+
+  const k = 'locations'; // always autofill locations
+
+  if (!(k in known)) {
+    autofillInfo = { key: k, value: target[k] };
+    known[k] = target[k];
+    setGameMsg(`HP reached 5: Locations has been auto-filled!`);
+    renderKnown();
+  }
+}
+
+
+// ---- Boss drop reveal ----
+function revealBossDrop() {
+  if (dropRevealed) return;
+  dropRevealed = true;
+  setGameMsg('HP reached 1: Boss drop revealed!');
+  renderKnown();
+}
+
+// ---- Game logic ----
+function pickRandomTarget(){ if(!bosses.length) return null; const idx = Math.floor(Math.random()*bosses.length); return bosses[idx]; }
+
+function compareGuess(guessMeta, targetMeta){
+  const res = {};
+  for(const k of ['base','dlc','night','parry']){ const g=!!guessMeta[k]; const t=!!targetMeta[k]; res[k]={guess:g, target:t, ok: g===t}; }
+  for(const k of ['types','locations','immunities','strong','weak']){
+    const gset = guessMeta[k]||[]; const tset = targetMeta[k]||[];
+    const containsNone = !intersects(gset,tset);
+    const exact = eqArrayExact(gset,tset);
+    let color='red'; if(exact) color='green'; else if(!containsNone) color='yellow'; res[k]={guess:gset,target:tset,color};
+  }
+  for(const k of ['appearances','runes']){ const g=guessMeta[k]; const t=targetMeta[k]; res[k]={guess:g,target:t,ok:(Number.isInteger(g)&&Number.isInteger(t)&&g===t)}; }
+  return res;
+}
+
+function renderGuessRow(idx,name,cmp){
+  const tbody=document.querySelector('#guessesTable tbody');
+  const imgUrl = getBossImg(name);
+  const bgStyle = imgUrl
+    ? `background-image:url('${imgUrl}');background-size:cover;background-repeat:no-repeat;background-position:center;background-color:#000;`
+    : `background-color:#000;`;
+  const tr = document.createElement('tr');
+  // Remove guess number cell
+  tr.innerHTML = `<td class="boss-cell" style="${bgStyle}"><span>${escapeHtml(name)}</span></td>`;
+  // Use ticks/crosses for base, dlc, nightreign
+  function boolCell(o){
+    const symbol = o.guess ? '✔️' : '❌';
+    return `<td class="${o.ok? 'green':'red'}">${symbol}</td>`;
+  }
+  tr.insertAdjacentHTML('beforeend', boolCell(cmp.base));
+  tr.insertAdjacentHTML('beforeend', boolCell(cmp.dlc));
+  tr.insertAdjacentHTML('beforeend', boolCell(cmp.night));
+  tr.insertAdjacentHTML('beforeend', boolCell(cmp.parry));
+  // Replace multiCell function
+  function multiCell(o, colName){ 
+    if(['immunities','strong','weak'].includes(colName)) {
+      const v = o.guess.length ? o.guess.map(val => renderValueAsImage(val)).join(' ') : '-';
+      return `<td class="${o.color}" style="text-align:center;">${v}</td>`;
+    }
+    if(['types','locations'].includes(colName)) {
+      const v = o.guess.length ? `<ul style="margin:0;padding-left:20px;">` + 
+        o.guess.map(val => `<li>${renderColoredText(val)}</li>`).join('') + 
+        `</ul>` : '-';
+      return `<td class="${o.color}">${v}</td>`;
+    }
+    const v = o.guess.length ? escapeHtml(o.guess.join(', ')) : '-';
+    return `<td class="${o.color}">${v}</td>`; 
+  }
+  tr.insertAdjacentHTML('beforeend', multiCell(cmp.types, 'types'));
+  // Appearances cell with arrow
+  let appArrow = '';
+  if(Number.isInteger(cmp.appearances.guess) && Number.isInteger(cmp.appearances.target) && cmp.appearances.guess !== cmp.appearances.target) {
+    appArrow = cmp.appearances.guess < cmp.appearances.target ? ' <span title="Target is higher" style="color:#ffffff;">▲</span>' : ' <span title="Target is lower" style="color:#ffffff;">▼</span>';
+  }
+  tr.insertAdjacentHTML('beforeend',
+    `<td class="${cmp.appearances.ok? 'green':'red'}">${cmp.appearances.guess==null? '-':escapeHtml(String(cmp.appearances.guess))}${appArrow}</td>`
+  );
+  tr.insertAdjacentHTML('beforeend', multiCell(cmp.locations, 'locations'));
+  tr.insertAdjacentHTML('beforeend', multiCell(cmp.immunities, 'immunities'));
+  tr.insertAdjacentHTML('beforeend', multiCell(cmp.strong, 'strong'));
+  tr.insertAdjacentHTML('beforeend', multiCell(cmp.weak, 'weak'));
+  // Runes cell with arrow
+  let runesArrow = '';
+  if(Number.isInteger(cmp.runes.guess) && Number.isInteger(cmp.runes.target) && cmp.runes.guess !== cmp.runes.target) {
+    runesArrow = cmp.runes.guess < cmp.runes.target ? ' <span title="Target is higher" style="color:#ffffff;">▲</span>' : ' <span title="Target is lower" style="color:#ffffff;">▼</span>';
+  }
+  tr.insertAdjacentHTML('beforeend',
+    `<td class="${cmp.runes.ok? 'green':'red'}">${cmp.runes.guess==null? '-':escapeHtml(String(cmp.runes.guess))}${runesArrow}</td>`
+  );
+  // Insert at the top instead of append
+  tbody.insertBefore(tr, tbody.firstChild);
+}
+
+function updateKnownAndRanges(){
+  known = {};
+  // Restore autofilled info if it exists
+  if (autofillInfo) {
+    known[autofillInfo.key] = autofillInfo.value;
+  }
+
+  let possA = new Set(possibleInts.appearances);
+  let possR = new Set(possibleInts.runes);
+  let minA = null, maxA = null;
+  let minR = null, maxR = null;
+
+  // Fill known booleans from first guess, but if the guess is wrong, show the opposite
+  if (guesses.length > 0) {
+    const firstCmp = guesses[0].cmp;
+    for (const k of ['base', 'dlc', 'night', 'parry']) {
+      if (!(k in known)) {
+        known[k] = firstCmp[k].ok ? firstCmp[k].guess : !firstCmp[k].guess;
+      }
+    }
+  }
+
+  // Process guesses to establish bounds
+  for(const g of guesses){
+    const cmp = g.cmp;
+    for(const k of ['types','locations','immunities','strong','weak']){ if(cmp[k].color==='green') known[k]=cmp[k].guess.slice(); }
+    // Handle appearances
+    if(cmp.appearances.ok) {
+      known.appearances = cmp.appearances.guess;
+    } else if(Number.isInteger(g.meta.appearances)) {
+      possA.delete(g.meta.appearances);
+      if(cmp.appearances.target > g.meta.appearances) {
+        minA = Math.max(minA || g.meta.appearances, g.meta.appearances);
+      } else if(cmp.appearances.target < g.meta.appearances) {
+        maxA = Math.min(maxA || g.meta.appearances, g.meta.appearances);
+      }
+    }
+    if(cmp.runes.ok) {
+      known.runes = cmp.runes.guess;
+    } else if(Number.isInteger(g.meta.runes)) {
+      possR.delete(g.meta.runes);
+      if(cmp.runes.target > g.meta.runes) {
+        minR = Math.max(minR || g.meta.runes, g.meta.runes);
+      } else if(cmp.runes.target < g.meta.runes) {
+        maxR = Math.min(maxR || g.meta.runes, g.meta.runes);
+      }
+    }
+  }
+
+  // Set appearances range
+  if(!('appearances' in known)) {
+    const arrA = [...possA].sort((a,b)=>a-b);
+    if(arrA.length === 1) {
+      known.appearances_range = arrA[0];
+      known.appearances_range_type = 'single';
+    } else if(minA !== null && maxA === null) {
+      known.appearances_range = `${minA}<span title="Target is higher" style="color:#ffffff;">▲</span>`;
+      known.appearances_range_type = 'lower';
+    } else if(maxA !== null && minA === null) {
+      known.appearances_range = `${maxA}<span title="Target is lower" style="color:#ffffff;">▼</span>`;
+      known.appearances_range_type = 'upper';
+    } else if(minA !== null && maxA !== null) {
+      known.appearances_range = `${minA}<span title="Target is higher" style="color:#ffffff;">▲</span> - ${maxA}<span title="Target is lower" style="color:#ffffff;">▼</span>`;
+      known.appearances_range_type = 'range';
+    } else {
+      known.appearances_range = `${arrA[0]} - ${arrA[arrA.length-1]}`;
+      known.appearances_range_type = 'range';
+    }
+  }
+
+  // Set runes range
+  if(!('runes' in known)) {
+    const arrR = [...possR].sort((a,b)=>a-b);
+    if(arrR.length === 1) {
+      known.runes_range = arrR[0];
+      known.runes_range_type = 'single';
+    } else if(minR !== null && maxR === null) {
+      known.runes_range = `${minR}<span title="Target is higher" style="color:#ffffff;">▲</span>`;
+      known.runes_range_type = 'lower';
+    } else if(maxR !== null && minR === null) {
+      known.runes_range = `${maxR}<span title="Target is lower" style="color:#ffffff;">▼</span>`;
+      known.runes_range_type = 'upper';
+    } else if(minR !== null && maxR !== null) {
+      known.runes_range = `${minR}<span title="Target is higher" style="color:#ffffff;">▲</span> - ${maxR}<span title="Target is lower" style="color:#ffffff;">▼</span>`;
+      known.runes_range_type = 'range';
+    } else {
+      known.runes_range = `${arrR[0]} - ${arrR[arrR.length-1]}`;
+      known.runes_range_type = 'range';
+    }
+  }
+
+  renderKnown();
+}
+
+function renderKnown(){
+  const tbody = document.querySelector('#knownTable tbody');
+  const dropHeader = document.getElementById('dropHeader');
+  tbody.innerHTML = '';
+  dropHeader.style.display = dropRevealed ? '' : 'none';
+  const tr = document.createElement('tr');
+  // Boss name cell
+  if ('boss' in known) {
+    const imgUrl = getBossImg(known.boss);
+    const bgStyle = imgUrl
+      ? `background-image:url('${imgUrl}');background-size:cover;background-repeat:no-repeat;background-position:center;background-color:#000;`
+      : `background-color:#000;`;
+    tr.innerHTML = `<td class="boss-cell green" style="${bgStyle}"><span>${escapeHtml(String(known.boss))}</span></td>`;
+  } else {
+    tr.innerHTML = `<td class="muted">-</td>`;
+  }
+  // Use ticks/crosses for base, dlc, nightreign
+  function boolCell(k){
+    if(k in known) {
+      const symbol = known[k] ? '✔️' : '❌';
+      return `<td class="green">${symbol}</td>`;
+    }
+    return `<td class="muted">?</td>`;
+  }
+  tr.insertAdjacentHTML('beforeend', boolCell('base'));
+  tr.insertAdjacentHTML('beforeend', boolCell('dlc'));
+  tr.insertAdjacentHTML('beforeend', boolCell('night'));
+  tr.insertAdjacentHTML('beforeend', boolCell('parry'));
+  // Replace multiCell function
+  function multiCell(k){
+    if(['immunities','strong','weak'].includes(k)) {
+      if(k in known) {
+        const v = known[k].length ? known[k].map(val => renderValueAsImage(val)).join(' ') : '-';
+        return `<td class="green" style="text-align:center;">${v}</td>`;
+      }
+      return `<td class="muted">?</td>`;
+    }
+    if(['types','locations'].includes(k)) {
+      if(k in known) {
+        const v = known[k].length ? `<ul style="margin:0;padding-left:20px;">` + 
+          known[k].map(val => `<li>${renderColoredText(val)}</li>`).join('') + 
+          `</ul>` : '-';
+        return `<td class="green">${v}</td>`;
+      }
+      return `<td class="muted">?</td>`;
+    }
+    if(k in known) return `<td class="green">${known[k].length ? escapeHtml(known[k].join(', ')) : '-'}</td>`;
+    return `<td class="muted">?</td>`;
+  }
+  tr.insertAdjacentHTML('beforeend', multiCell('types'));
+  // Appearances cell
+  if('appearances' in known)
+    tr.insertAdjacentHTML('beforeend', `<td class="green">${escapeHtml(String(known.appearances))}</td>`);
+  else {
+    let color = 'yellow';
+    if(known.appearances_range_type === 'single') color = 'green';
+    // Use innerHTML for arrow markup
+    tr.insertAdjacentHTML('beforeend', `<td class="${color}">${known.appearances_range || '?'}</td>`);
+  }
+  // Locations, Immunities, Strong, Weak
+  tr.insertAdjacentHTML('beforeend', multiCell('locations'));
+  tr.insertAdjacentHTML('beforeend', multiCell('immunities'));
+  tr.insertAdjacentHTML('beforeend', multiCell('strong'));
+  tr.insertAdjacentHTML('beforeend', multiCell('weak'));
+  // Runes cell
+  if('runes' in known)
+    tr.insertAdjacentHTML('beforeend', `<td class="green">${escapeHtml(String(known.runes))}</td>`);
+  else {
+    let color = 'yellow';
+    if(known.runes_range_type === 'single') color = 'green';
+    tr.insertAdjacentHTML('beforeend', `<td class="${color}">${known.runes_range || '?'}</td>`);
+  }
+  // Boss drop column
+  if (dropRevealed) {
+    tr.insertAdjacentHTML('beforeend', `<td class="green">${escapeHtml(target.drop || '-')}</td>`);
+  }
+  tbody.appendChild(tr);
+}
+
+// ---- Interaction ----
+function findBossByName(n){ if(!n) return null; const lower = String(n).trim().toLowerCase(); return bosses.find(b=>b.name.toLowerCase()===lower) || null; }
+function submitGuessFromInput(){
+  if (health <= 0) return;
+  const input = document.getElementById('guessInput');
+  const name = input.value.trim();
+  if(!name) return;
+  const meta = findBossByName(name);
+  if(!meta){ alert('Boss not found — check spelling or choose from the list'); return; }
+  //adds to guessed boss list and repopulates datalist
+  if (!guessedBosses.includes(meta.name)) {
+    guessedBosses.push(meta.name);
+    guessInput.value = ''; // Clear input
+    
+    // Only repopulate if input has content
+    if (guessInput.value.trim().length > 0) {
+      populateDatalist(guessInput.value);
+    } else {
+      dl.innerHTML = ''; // Otherwise clear the datalist
+    }
+  }
+  if (meta.name === target.name) {
+    // Fully fill in known information, including boss name and drop
+    for (const k of [
+      'base','dlc','night','parry',
+      'types','locations','immunities','strong','weak',
+      'appearances','runes'
+    ]) {
+      known[k] = target[k];
+    }
+    known.boss = target.name;
+    dropRevealed = true;
+    setGameMsg('You won! All information revealed.');
+    health = Math.max(health, 1); // Don't lose on win
+    updateHealthBar();
+    renderKnown();
+    renderGuessRow(guesses.length+1, meta.name, compareGuess(meta,target));
+    input.value=''; input.blur();
+    input.disabled = true;
+    document.getElementById('guessBtn').disabled = true;
+    showPopup("ENEMY FELLED" , 3000, "#dbb71e");
+    return;
+  }
+  const cmp = compareGuess(meta,target);
+  guesses.push({name:meta.name, meta, cmp});
+  renderGuessRow(guesses.length, meta.name, cmp);
+  input.value=''; input.focus();
+
+  health--;
+  updateHealthBar();
+
+  if (health === 5) {
+    autofillKnownInfo();
+  }
+  if (health === 1) {
+    revealBossDrop();
+  }
+  if (health === 0) {
+    setGameMsg(`You lost! The boss was: ${target.name}`);
+    revealBossDrop();
+    autofillKnownInfo();
+    input.disabled = true;
+    document.getElementById('guessBtn').disabled = true;
+    updateKnownAndRanges();
+    showPopup("YOU DIED" , 3000, "#9d0803");
+  }
+  updateKnownAndRanges();
+}
+
+// Hide/show datalist suggestions only if input has a character
+const guessInput = document.getElementById('guessInput');
+const dl = document.getElementById('bossList');
+const guessedBosses = []; //stores guessed names
+// Populate datalist dynamically, excluding guessed bosses
+function populateDatalist(filter = '') {
+  dl.innerHTML = ''; // Clear previous options
+  for (const b of bosses) {
+    // Skip bosses already guessed
+    if (guessedBosses.includes(b.name)) continue;
+    // Optional: filter by typed input
+    if (b.name.toLowerCase().includes(filter.toLowerCase())) {
+      const o = document.createElement('option');
+      o.value = b.name;
+      dl.appendChild(o);
+    }
+  }
+}
+
+// Event listener for typing
+guessInput.addEventListener('input', function() {
+  const value = this.value.trim();
+  if (value.length > 0) {
+    populateDatalist(value);
+  } else {
+    dl.innerHTML = '';
+  }
+});
+
+// Help popup logic
+const helpBtn = document.getElementById('helpBtn');
+const helpPopup = document.getElementById('helpPopup');
+const helpOverlay = document.getElementById('helpOverlay');
+const closeHelpBtn = document.getElementById('closeHelpBtn');
+helpBtn.addEventListener('click', function() {
+  helpPopup.style.display = 'block';
+  helpOverlay.style.display = 'block';
+});
+closeHelpBtn.addEventListener('click', function() {
+  helpPopup.style.display = 'none';
+  helpOverlay.style.display = 'none';
+});
+helpOverlay.addEventListener('click', function() {
+  helpPopup.style.display = 'none';
+  helpOverlay.style.display = 'none';
+});
+
+// ---- Utilities ----
+function csvToArray(text){
+  const rows=[]; const lines = text.split(/\r?\n/);
+  for(let raw of lines){ if(!raw.trim()) continue; const cells=[]; let cur=''; let inQ=false;
+    for(let i=0;i<raw.length;i++){ const ch = raw[i]; if(ch==='"'){ if(inQ && raw[i+1]==='"'){ cur+='"'; i++; } else { inQ = !inQ; } continue; }
+      if(ch===',' && !inQ){ cells.push(cur); cur=''; } else cur+=ch; }
+    cells.push(cur); rows.push(cells);
+  }
+  return rows;
+}
+function normBool(v){ if(v===undefined||v===null) return false; const s=String(v).trim().toLowerCase(); return ['true','yes','y','1','t','✔','x'].includes(s); }
+function splitMulti(v){ 
+  if(!v && v!==0) return []; 
+  return String(v).split(/[;,|\n]+/).map(s=>s.trim()).filter(Boolean);
+}
+function eqArrayExact(a,b){ if(a.length!==b.length) return false; const A=[...a].sort(); const B=[...b].sort(); for(let i=0;i<A.length;i++) if(A[i]!==B[i]) return false; return true; }
+function intersects(a,b){ return a.some(x=>b.includes(x)); }
+
+// Load value->image mapping from Sheet2
+async function loadValueImageMap() {
+  const res = await fetch(SHEET2_CSV_URL);
+  if(!res.ok) throw new Error('Failed to fetch Sheet2');
+  const txt = await res.text();
+  const rows = csvToArray(txt);
+  // Skip header row
+  for(const row of rows.slice(1)) {
+    if(row.length < 2 || !row[0] || !row[1]) continue;
+    valueImageMap.set(row[0].trim().toLowerCase(), {
+      word: row[0].trim(),
+      imgUrl: row[1].trim()
+    });
+  }
+}
+
+// Load text color mapping from Sheet3
+async function loadTextColors() {
+  const res = await fetch(SHEET3_CSV_URL);
+  if(!res.ok) throw new Error('Failed to fetch Sheet3');
+  const txt = await res.text();
+  const rows = csvToArray(txt);
+  // Skip header row
+  for(const row of rows.slice(1)) {
+    if(row.length < 2 || !row[0] || !row[1]) continue;
+    textColorMap.set(row[0].trim(), row[1].trim());
+  }
+}
+
+// Helper to render value as image
+function renderValueAsImage(value) {
+  const entry = valueImageMap.get(value.toLowerCase());
+  if(entry) {
+    return `<img class="icon" src="${escapeHtml(entry.imgUrl)}" 
+      alt="${escapeHtml(entry.word)}" 
+      title="${escapeHtml(entry.word)}" />`;
+  }
+  return escapeHtml(value);
+}
+
+// Add this new function
+function renderColoredText(value) {
+  const color = textColorMap.get(value) || '#000000';
+  return `<span style="color:${color};text-shadow:3px 3px 6px rgba(0,0,0,0.5);">${escapeHtml(value)}</span>`;
+}
+
+// ---- Parsing ----
+function parseRows(rows){
+  // skip header
+  const data = rows.slice(1).filter(r=>r.length>0);
+  bosses = data.map(r=>({
+    raw:r,
+    name: r[COLS.name-1] ? r[COLS.name-1].trim() : '',
+    img: r[COLS.img-1] ? r[COLS.img-1].trim() : '', // column O is the image url
+    base: normBool(r[COLS.base-1]),
+    dlc: normBool(r[COLS.dlc-1]),
+    night: normBool(r[COLS.night-1]),
+    parry: normBool(r[COLS.parry-1]),
+    types: splitMulti(r[COLS.types-1]),
+    appearances: r[COLS.appearances-1] ? parseInt(r[COLS.appearances-1],10) : null,
+    locations: splitMulti(r[COLS.locations-1]),
+    immunities: splitMulti(r[COLS.immunities-1]),
+    strong: splitMulti(r[COLS.strong-1]),
+    weak: splitMulti(r[COLS.weak-1]),
+    runes: r[COLS.runes-1] ? parseInt(r[COLS.runes-1],10) : null,
+    drop: r[COLS.drop-1] ? r[COLS.drop-1].trim() : ''
+  })).filter(b=>b.name);
+
+  possibleInts.appearances = new Set(bosses.filter(b=>Number.isInteger(b.appearances)).map(b=>b.appearances));
+  possibleInts.runes = new Set(bosses.filter(b=>Number.isInteger(b.runes)).map(b=>b.runes));
+}
+
+// Helper to get image for a boss name
+function getBossImg(name) {
+  const boss = bosses.find(b=>b.name===name);
+  return boss && boss.img ? boss.img : '';
+}
+
+// ---- Health bar ----
+function updateHealthBar() {
+  const fill = document.getElementById('healthFill');
+  const val = document.getElementById('healthValue');
+  fill.style.width = (health*10) + '%';
+  val.textContent = `${health}/10`;
+}
+
+// ---- Game message ----
+function setGameMsg(msg) {
+  document.getElementById('gameMsg').textContent = msg || '';
+}
+
+// ---- Known info autofill ----
+function autofillKnownInfo() {
+  if (!target || autofillInfo) return;
+  // Find the first unknown category and fill it in, then update known info table
+  const categories = [
+    'base','dlc','night','parry',
+    'types','locations','immunities','strong','weak',
+    'appearances','runes'
+  ];
+  for (const k of categories) {
+    if (!(k in known)) {
+      autofillInfo = { key: k, value: target[k] };
+      known[k] = target[k];
+      setGameMsg(`HP reached 5: "${k}" has been auto-filled!`);
+      renderKnown();
+      return;
+    }
+  }
+}
+
+// ---- Boss drop reveal ----
+function revealBossDrop() {
+  if (dropRevealed) return;
+  dropRevealed = true;
+  setGameMsg('HP reached 1: Boss drop revealed!');
+  renderKnown();
+}
+
+// ---- Game logic ----
+function pickRandomTarget(){ if(!bosses.length) return null; const idx = Math.floor(Math.random()*bosses.length); return bosses[idx]; }
+
+function compareGuess(guessMeta, targetMeta){
+  const res = {};
+  for(const k of ['base','dlc','night','parry']){ const g=!!guessMeta[k]; const t=!!targetMeta[k]; res[k]={guess:g, target:t, ok: g===t}; }
+  for(const k of ['types','locations','immunities','strong','weak']){
+    const gset = guessMeta[k]||[]; const tset = targetMeta[k]||[];
+    const containsNone = !intersects(gset,tset);
+    const exact = eqArrayExact(gset,tset);
+    let color='red'; if(exact) color='green'; else if(!containsNone) color='yellow'; res[k]={guess:gset,target:tset,color};
+  }
+  for(const k of ['appearances','runes']){ const g=guessMeta[k]; const t=targetMeta[k]; res[k]={guess:g,target:t,ok:(Number.isInteger(g)&&Number.isInteger(t)&&g===t)}; }
+  return res;
+}
+
+function renderGuessRow(idx,name,cmp){
+  const tbody=document.querySelector('#guessesTable tbody');
+  const imgUrl = getBossImg(name);
+  const bgStyle = imgUrl
+    ? `background-image:url('${imgUrl}');background-size:cover;background-repeat:no-repeat;background-position:center;background-color:#000;`
+    : `background-color:#000;`;
+  const tr = document.createElement('tr');
+  // Remove guess number cell
+  tr.innerHTML = `<td class="boss-cell" style="${bgStyle}"><span>${escapeHtml(name)}</span></td>`;
+  // Use ticks/crosses for base, dlc, nightreign
+  function boolCell(o){
+    const symbol = o.guess ? '✔️' : '❌';
+    return `<td class="${o.ok? 'green':'red'}">${symbol}</td>`;
+  }
+  tr.insertAdjacentHTML('beforeend', boolCell(cmp.base));
+  tr.insertAdjacentHTML('beforeend', boolCell(cmp.dlc));
+  tr.insertAdjacentHTML('beforeend', boolCell(cmp.night));
+  tr.insertAdjacentHTML('beforeend', boolCell(cmp.parry));
+  // Replace multiCell function
+  function multiCell(o, colName){ 
+    if(['immunities','strong','weak'].includes(colName)) {
+      const v = o.guess.length ? o.guess.map(val => renderValueAsImage(val)).join(' ') : '-';
+      return `<td class="${o.color}" style="text-align:center;">${v}</td>`;
+    }
+    if(['types','locations'].includes(colName)) {
+      const v = o.guess.length ? `<ul style="margin:0;padding-left:20px;">` + 
+        o.guess.map(val => `<li>${renderColoredText(val)}</li>`).join('') + 
+        `</ul>` : '-';
+      return `<td class="${o.color}">${v}</td>`;
+    }
+    const v = o.guess.length ? escapeHtml(o.guess.join(', ')) : '-';
+    return `<td class="${o.color}">${v}</td>`; 
+  }
+  tr.insertAdjacentHTML('beforeend', multiCell(cmp.types, 'types'));
+  // Appearances cell with arrow
+  let appArrow = '';
+  if(Number.isInteger(cmp.appearances.guess) && Number.isInteger(cmp.appearances.target) && cmp.appearances.guess !== cmp.appearances.target) {
+    appArrow = cmp.appearances.guess < cmp.appearances.target ? ' <span title="Target is higher" style="color:#ffffff;">▲</span>' : ' <span title="Target is lower" style="color:#ffffff;">▼</span>';
+  }
+  tr.insertAdjacentHTML('beforeend',
+    `<td class="${cmp.appearances.ok? 'green':'red'}">${cmp.appearances.guess==null? '-':escapeHtml(String(cmp.appearances.guess))}${appArrow}</td>`
+  );
+  tr.insertAdjacentHTML('beforeend', multiCell(cmp.locations, 'locations'));
+  tr.insertAdjacentHTML('beforeend', multiCell(cmp.immunities, 'immunities'));
+  tr.insertAdjacentHTML('beforeend', multiCell(cmp.strong, 'strong'));
+  tr.insertAdjacentHTML('beforeend', multiCell(cmp.weak, 'weak'));
+  // Runes cell with arrow
+  let runesArrow = '';
+  if(Number.isInteger(cmp.runes.guess) && Number.isInteger(cmp.runes.target) && cmp.runes.guess !== cmp.runes.target) {
+    runesArrow = cmp.runes.guess < cmp.runes.target ? ' <span title="Target is higher" style="color:#ffffff;">▲</span>' : ' <span title="Target is lower" style="color:#ffffff;">▼</span>';
+  }
+  tr.insertAdjacentHTML('beforeend',
+    `<td class="${cmp.runes.ok? 'green':'red'}">${cmp.runes.guess==null? '-':escapeHtml(String(cmp.runes.guess))}${runesArrow}</td>`
+  );
+  // Insert at the top instead of append
+  tbody.insertBefore(tr, tbody.firstChild);
+}
+
+function updateKnownAndRanges(){
+  known = {};
+  // Restore autofilled info if it exists
+  if (autofillInfo) {
+    known[autofillInfo.key] = autofillInfo.value;
+  }
+
+  let possA = new Set(possibleInts.appearances);
+  let possR = new Set(possibleInts.runes);
+  let minA = null, maxA = null;
+  let minR = null, maxR = null;
+
+  // Fill known booleans from first guess, but if the guess is wrong, show the opposite
+  if (guesses.length > 0) {
+    const firstCmp = guesses[0].cmp;
+    for (const k of ['base', 'dlc', 'night', 'parry']) {
+      if (!(k in known)) {
+        known[k] = firstCmp[k].ok ? firstCmp[k].guess : !firstCmp[k].guess;
+      }
+    }
+  }
+
+  // Process guesses to establish bounds
+  for(const g of guesses){
+    const cmp = g.cmp;
+    for(const k of ['types','locations','immunities','strong','weak']){ if(cmp[k].color==='green') known[k]=cmp[k].guess.slice(); }
+    // Handle appearances
+    if(cmp.appearances.ok) {
+      known.appearances = cmp.appearances.guess;
+    } else if(Number.isInteger(g.meta.appearances)) {
+      possA.delete(g.meta.appearances);
+      if(cmp.appearances.target > g.meta.appearances) {
+        minA = Math.max(minA || g.meta.appearances, g.meta.appearances);
+      } else if(cmp.appearances.target < g.meta.appearances) {
+        maxA = Math.min(maxA || g.meta.appearances, g.meta.appearances);
+      }
+    }
+    if(cmp.runes.ok) {
+      known.runes = cmp.runes.guess;
+    } else if(Number.isInteger(g.meta.runes)) {
+      possR.delete(g.meta.runes);
+      if(cmp.runes.target > g.meta.runes) {
+        minR = Math.max(minR || g.meta.runes, g.meta.runes);
+      } else if(cmp.runes.target < g.meta.runes) {
+        maxR = Math.min(maxR || g.meta.runes, g.meta.runes);
+      }
+    }
+  }
+
+  // Set appearances range
+  if(!('appearances' in known)) {
+    const arrA = [...possA].sort((a,b)=>a-b);
+    if(arrA.length === 1) {
+      known.appearances_range = arrA[0];
+      known.appearances_range_type = 'single';
+    } else if(minA !== null && maxA === null) {
+      known.appearances_range = `${minA}<span title="Target is higher" style="color:#ffffff;">▲</span>`;
+      known.appearances_range_type = 'lower';
+    } else if(maxA !== null && minA === null) {
+      known.appearances_range = `${maxA}<span title="Target is lower" style="color:#ffffff;">▼</span>`;
+      known.appearances_range_type = 'upper';
+    } else if(minA !== null && maxA !== null) {
+      known.appearances_range = `${minA}<span title="Target is higher" style="color:#ffffff;">▲</span> - ${maxA}<span title="Target is lower" style="color:#ffffff;">▼</span>`;
+      known.appearances_range_type = 'range';
+    } else {
+      known.appearances_range = `${arrA[0]} - ${arrA[arrA.length-1]}`;
+      known.appearances_range_type = 'range';
+    }
+  }
+
+  // Set runes range
+  if(!('runes' in known)) {
+    const arrR = [...possR].sort((a,b)=>a-b);
+    if(arrR.length === 1) {
+      known.runes_range = arrR[0];
+      known.runes_range_type = 'single';
+    } else if(minR !== null && maxR === null) {
+      known.runes_range = `${minR}<span title="Target is higher" style="color:#ffffff;">▲</span>`;
+      known.runes_range_type = 'lower';
+    } else if(maxR !== null && minR === null) {
+      known.runes_range = `${maxR}<span title="Target is lower" style="color:#ffffff;">▼</span>`;
+      known.runes_range_type = 'upper';
+    } else if(minR !== null && maxR !== null) {
+      known.runes_range = `${minR}<span title="Target is higher" style="color:#ffffff;">▲</span> - ${maxR}<span title="Target is lower" style="color:#ffffff;">▼</span>`;
+      known.runes_range_type = 'range';
+    } else {
+      known.runes_range = `${arrR[0]} - ${arrR[arrR.length-1]}`;
+      known.runes_range_type = 'range';
+    }
+  }
+
+  renderKnown();
+}
+
+function renderKnown(){
+  const tbody = document.querySelector('#knownTable tbody');
+  const dropHeader = document.getElementById('dropHeader');
+  tbody.innerHTML = '';
+  dropHeader.style.display = dropRevealed ? '' : 'none';
+  const tr = document.createElement('tr');
+  // Boss name cell
+  if ('boss' in known) {
+    const imgUrl = getBossImg(known.boss);
+    const bgStyle = imgUrl
+      ? `background-image:url('${imgUrl}');background-size:cover;background-repeat:no-repeat;background-position:center;background-color:#000;`
+      : `background-color:#000;`;
+    tr.innerHTML = `<td class="boss-cell green" style="${bgStyle}"><span>${escapeHtml(String(known.boss))}</span></td>`;
+  } else {
+    tr.innerHTML = `<td class="muted">-</td>`;
+  }
+  // Use ticks/crosses for base, dlc, nightreign
+  function boolCell(k){
+    if(k in known) {
+      const symbol = known[k] ? '✔️' : '❌';
+      return `<td class="green">${symbol}</td>`;
+    }
+    return `<td class="muted">?</td>`;
+  }
+  tr.insertAdjacentHTML('beforeend', boolCell('base'));
+  tr.insertAdjacentHTML('beforeend', boolCell('dlc'));
+  tr.insertAdjacentHTML('beforeend', boolCell('night'));
+  tr.insertAdjacentHTML('beforeend', boolCell('parry'));
+  // Replace multiCell function
+  function multiCell(k){
+    if(['immunities','strong','weak'].includes(k)) {
+      if(k in known) {
+        const v = known[k].length ? known[k].map(val => renderValueAsImage(val)).join(' ') : '-';
+        return `<td class="green" style="text-align:center;">${v}</td>`;
+      }
+      return `<td class="muted">?</td>`;
+    }
+    if(['types','locations'].includes(k)) {
+      if(k in known) {
+        const v = known[k].length ? `<ul style="margin:0;padding-left:20px;">` + 
+          known[k].map(val => `<li>${renderColoredText(val)}</li>`).join('') + 
+          `</ul>` : '-';
+        return `<td class="green">${v}</td>`;
+      }
+      return `<td class="muted">?</td>`;
+    }
+    if(k in known) return `<td class="green">${known[k].length ? escapeHtml(known[k].join(', ')) : '-'}</td>`;
+    return `<td class="muted">?</td>`;
+  }
+  tr.insertAdjacentHTML('beforeend', multiCell('types'));
+  // Appearances cell
+  if('appearances' in known)
+    tr.insertAdjacentHTML('beforeend', `<td class="green">${escapeHtml(String(known.appearances))}</td>`);
+  else {
+    let color = 'yellow';
+    if(known.appearances_range_type === 'single') color = 'green';
+    tr.insertAdjacentHTML('beforeend', `<td class="${color}">${known.appearances_range || '?'}</td>`);
+  }
+  // Locations, Immunities, Strong, Weak
+  tr.insertAdjacentHTML('beforeend', multiCell('locations'));
+  tr.insertAdjacentHTML('beforeend', multiCell('immunities'));
+  tr.insertAdjacentHTML('beforeend', multiCell('strong'));
+  tr.insertAdjacentHTML('beforeend', multiCell('weak'));
+  // Runes cell
+  if('runes' in known)
+    tr.insertAdjacentHTML('beforeend', `<td class="green">${escapeHtml(String(known.runes))}</td>`);
+  else {
+    let color = 'yellow';
+    if(known.runes_range_type === 'single') color = 'green';
+    tr.insertAdjacentHTML('beforeend', `<td class="${color}">${known.runes_range || '?'}</td>`);
+  }
+  // Boss drop column
+  if (dropRevealed) {
+    tr.insertAdjacentHTML('beforeend', `<td class="green">${escapeHtml(target.drop || '-')}</td>`);
+  }
+  tbody.appendChild(tr);
+}
+
+// ---- Update known/ranges logic (unchanged except call renderKnown at end) ----
+function updateKnownAndRanges(){
+  known = {};
+  // Restore autofilled info if it exists
+  if (autofillInfo) {
+    known[autofillInfo.key] = autofillInfo.value;
+  }
+
+  let possA = new Set(possibleInts.appearances);
+  let possR = new Set(possibleInts.runes);
+  let minA = null, maxA = null;
+  let minR = null, maxR = null;
+
+  // Fill known booleans from first guess, but if the guess is wrong, show the opposite
+  if (guesses.length > 0) {
+    const firstCmp = guesses[0].cmp;
+    for (const k of ['base', 'dlc', 'night', 'parry']) {
+      if (!(k in known)) {
+        known[k] = firstCmp[k].ok ? firstCmp[k].guess : !firstCmp[k].guess;
+      }
+    }
+  }
+
+  // Process guesses to establish bounds
+  for(const g of guesses){
+    const cmp = g.cmp;
+    for(const k of ['types','locations','immunities','strong','weak']){ if(cmp[k].color==='green') known[k]=cmp[k].guess.slice(); }
+    // Handle appearances
+    if(cmp.appearances.ok) {
+      known.appearances = cmp.appearances.guess;
+    } else if(Number.isInteger(g.meta.appearances)) {
+      possA.delete(g.meta.appearances);
+      if(cmp.appearances.target > g.meta.appearances) {
+        minA = Math.max(minA || g.meta.appearances, g.meta.appearances);
+      } else if(cmp.appearances.target < g.meta.appearances) {
+        maxA = Math.min(maxA || g.meta.appearances, g.meta.appearances);
+      }
+    }
+    if(cmp.runes.ok) {
+      known.runes = cmp.runes.guess;
+    } else if(Number.isInteger(g.meta.runes)) {
+      possR.delete(g.meta.runes);
+      if(cmp.runes.target > g.meta.runes) {
+        minR = Math.max(minR || g.meta.runes, g.meta.runes);
+      } else if(cmp.runes.target < g.meta.runes) {
+        maxR = Math.min(maxR || g.meta.runes, g.meta.runes);
+      }
+    }
+  }
+
+  // Set appearances range
+  if(!('appearances' in known)) {
+    const arrA = [...possA].sort((a,b)=>a-b);
+    if(arrA.length === 1) {
+      known.appearances_range = arrA[0];
+      known.appearances_range_type = 'single';
+    } else if(minA !== null && maxA === null) {
+      known.appearances_range = `${minA}<span title="Target is higher" style="color:#ffffff;">▲</span>`;
+      known.appearances_range_type = 'lower';
+    } else if(maxA !== null && minA === null) {
+      known.appearances_range = `${maxA}<span title="Target is lower" style="color:#ffffff;">▼</span>`;
+      known.appearances_range_type = 'upper';
+    } else if(minA !== null && maxA !== null) {
+      known.appearances_range = `${minA}<span title="Target is higher" style="color:#ffffff;">▲</span> - ${maxA}<span title="Target is lower" style="color:#ffffff;">▼</span>`;
+      known.appearances_range_type = 'range';
+    } else {
+      known.appearances_range = `${arrA[0]} - ${arrA[arrA.length-1]}`;
+      known.appearances_range_type = 'range';
+    }
+  }
+
+  // Set runes range
+  if(!('runes' in known)) {
+    const arrR = [...possR].sort((a,b)=>a-b);
+    if(arrR.length === 1) {
+      known.runes_range = arrR[0];
+      known.runes_range_type = 'single';
+    } else if(minR !== null && maxR === null) {
+      known.runes_range = `${minR}<span title="Target is higher" style="color:#ffffff;">▲</span>`;
+      known.runes_range_type = 'lower';
+    } else if(maxR !== null && minR === null) {
+      known.runes_range = `${maxR}<span title="Target is lower" style="color:#ffffff;">▼</span>`;
+      known.runes_range_type = 'upper';
+    } else if(minR !== null && maxR !== null) {
+      known.runes_range = `${minR}<span title="Target is higher" style="color:#ffffff;">▲</span> - ${maxR}<span title="Target is lower" style="color:#ffffff;">▼</span>`;
+      known.runes_range_type = 'range';
+    } else {
+      known.runes_range = `${arrR[0]} - ${arrR[arrR.length-1]}`;
+      known.runes_range_type = 'range';
+    }
+  }
+
+  renderKnown();
+}
+
+function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// ---- Load flow ----
+async function loadGame(){
+  try{
+    const status = document.getElementById('status');
+    status.textContent = 'Loading data...';
+    
+    // Load both mappings first
+    await Promise.all([
+      loadValueImageMap(),
+      loadTextColors()
+    ]);
+    
+    status.textContent = 'Fetching sheet…';
+    const res = await fetch(SHEET_CSV_URL);
+    if(!res.ok) throw new Error('Failed to fetch sheet — make sure it is publicly viewable or published.');
+    const txt = await res.text();
+    const rows = csvToArray(txt);
+    parseRows(rows);
+    if(!bosses.length) throw new Error('No bosses found in sheet.');
+    // fill datalist
+    //const dl = document.getElementById('bossList'); dl.innerHTML=''; for(const b of bosses){ const o = document.createElement('option'); o.value=b.name; dl.appendChild(o); }
+    target = pickRandomTarget();
+    updateHealthBar();
+    setGameMsg('');
+    status.textContent = 'Game ready — good luck!';
+  }catch(err){ document.getElementById('status').textContent = 'Error: '+err.message; console.error(err); }
+}
+
+function showPopup(message, duration = 3000, color = '#ffffff') {
+  const overlay = document.getElementById('popupOverlay');
+  const box = document.getElementById('popupBox');
+
+  if (!overlay || !box) {
+    console.error("Popup elements not found!");
+    return;
+  }
+
+  box.textContent = message;
+  box.style.color = color;
+  overlay.classList.add('show');
+
+  // Auto-hide after duration
+  const hideTimeout = setTimeout(() => {
+    overlay.classList.remove('show');
+  }, duration);
+
+  // Hide early if clicked
+  overlay.addEventListener('click', () => {
+    overlay.classList.remove('show');
+    clearTimeout(hideTimeout);
+  }, { once: true });
+}
+
+
+// ---- Events ----
+document.getElementById('guessBtn').addEventListener('click', ()=> submitGuessFromInput());
+document.getElementById('guessInput').addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); submitGuessFromInput(); } });
+
+document.getElementById('revealBtn').addEventListener('click', ()=>{ if(!target) return; alert('Target (dev): '+target.name); });
+
+// Start
+loadGame();
+</script>
+</body>
+</html>
